@@ -1,0 +1,21 @@
+html {
+  font-size: 62.5%;
+}
+body {
+  font-size: 1.6rem;
+}
+.notification {
+  padding: 1rem;
+  border: 1px solid;
+  background-color: lightgrey;
+  border-radius: 1rem;
+  margin-block-end: 1rem;
+}
+.success {
+  color: darkgreen;
+  border-color: darkgreen;
+}
+.failure {
+  color: red;
+  border-color: red;
+}
