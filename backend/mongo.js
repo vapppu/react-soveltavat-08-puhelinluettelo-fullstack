@@ -20,7 +20,7 @@ const personSchema = new mongoose.Schema({
 const Person = mongoose.model('Person', personSchema)
 
 // If no additional parameters given, print phonebook
-if (process.argv.length === 3) {
+if (process.argv.length < 5) {
     Person.find({}).then(result => {
         console.log('Phonebook')
         result.forEach(person => {
