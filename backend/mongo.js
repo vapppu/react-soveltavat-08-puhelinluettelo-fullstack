@@ -31,7 +31,7 @@ if (process.argv.length < 5) {
 }
 
 // If 5 parameters were given, add new person to phonebook
-if (process.argv.length === 5) {
+else if (process.argv.length === 5) {
 
     const [name, number] = [process.argv[3], process.argv[4]]
 
