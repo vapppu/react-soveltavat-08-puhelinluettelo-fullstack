@@ -19,12 +19,30 @@ const personSchema = new mongoose.Schema({
 
 const Person = mongoose.model('Person', personSchema)
 
-const person = new Person({
-    name: 'Aku Ankka',
-    number: '313',
-})
+// If no additional parameters given, print phonebook
+if (process.argv.length === 3) {
+    Person.find({}).then(result => {
+        console.log('Phonebook')
+        result.forEach(person => {
+            console.log(`${person.name} ${person.number}`)
+        })
+        mongoose.connection.close()
+    })
+}
 
-person.save().then(result => {
-    console.log('Person added!')
-    mongoose.connection.close()
-})
+// If 5 parameters were given, add new person to phonebook
+if (process.argv.length === 5) {
+
+    const [name, number] = [process.argv[3], process.argv[4]]
+
+    const person = new Person({
+        name: name,
+        number: number,
+    })
+    
+    person.save().then(result => {
+        console.log(`Added ${name} number ${number} to phonebook`)
+        mongoose.connection.close()
+    })
+}
+
