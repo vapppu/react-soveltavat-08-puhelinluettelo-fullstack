@@ -49,6 +49,10 @@ const App = () => {
         const newPersons = persons.concat(returnedPerson);
         setPersons(newPersons);
         showMessage(`${person.name} added to phonebook.`, false)
+      })
+      .catch(error => {
+        console.log(error.response.data)
+        showMessage(`${error.response.data.error}`, true)
       });
     } else if (personInBook.number === person.number) {
       showMessage(`${personInBook.name} is already added in the phone book`, true);
@@ -57,12 +61,17 @@ const App = () => {
         `Person ${person.name} is already added in the phone book. Replace old number with new one?`
       )
     ) {
-      personService.update(personInBook.id, person).then((response) => {
+      personService.update(personInBook.id, person)
+      .then((response) => {
         const newPersons = persons.map((person) =>
           person.id !== response.id ? person : response
         );
         setPersons(newPersons);
         showMessage(`Number updated for ${person.name}.`, false)
+      })
+      .catch(error => {
+          console.log(error.response.data)
+          showMessage(`${error.response.data.error}`, true)        
       });
     }
   };
