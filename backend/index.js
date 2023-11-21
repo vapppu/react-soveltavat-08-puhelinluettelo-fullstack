@@ -1,6 +1,10 @@
+require('dotenv').config()
+
+
 const express = require ('express')
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
 
 const app = express()
 
@@ -60,17 +64,17 @@ app.get('/info', (req, res) => {
     })
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
-})
+    Person.find({}).then(persons => {
+      res.json(persons)
+    })
+  })
+
 
 app.get('/api/persons/:id', (req, res) => {
-  const person = persons.find(person => person.id === Number(req.params.id))
-  if (person) {
-    res.json(person)
-  }
-  else {
-    res.status(404).end()
-  }
+  Person.findById(req.params.id)
+    .then(person => {
+      res.json(person)
+    })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -84,38 +88,25 @@ app.delete('/api/persons/:id', (req, res) => {
   }
 })
 
-app.post('/api/persons', (req, res) => {
-
-  const generateId = () => {
-    while (true) {
-      const randomId = Math.floor(Math.random() * 1000000);
-      if (!persons.find(person => person.id === randomId))
-      {
-        return randomId
-      }
-    }
-  }
-
-  const body = req.body
+app.post('/api/persons', (request, response) => {
+  const body = request.body
 
   if (!(body.name && body.number))
   {
-    return res.status(400).json({
-      error: "Request must contain name and number"
-    })
-  }
-  else if ((persons.find(person => person.name === body.name))) {
-    return res.status(400).json({
-      error: "Name must be unique"
-    })
+    return response.status(400).json({error: 'content missing'})
   }
 
-  const person = {name: body.name, number: body.number, id: generateId()}
-  persons = persons.concat(person)
-  res.json(person)
-  }
-)
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  })
 
-const PORT = process.env.PORT || 3001
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
+
+})
+
+const PORT = process.env.PORT
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)
