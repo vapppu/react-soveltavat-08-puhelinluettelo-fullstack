@@ -55,11 +55,14 @@ app.get("/", (req, res) => {
 
 app.get("/info", (req, res) => {
   const date = Date.now();
-  res.send(
-    `<p>Phonebook has info for ${persons.length} people.<p><p>${new Date(
-      date
-    ).toString()}</p>`
-  );
+  Person.find({})
+    .then(persons => {
+      res.send(
+        `<p>Phonebook has info for ${persons.length} people.<p><p>${new Date(
+          date
+        ).toString()}</p>`
+      )
+    })
 });
 
 app.get("/api/persons", (req, res) => {
